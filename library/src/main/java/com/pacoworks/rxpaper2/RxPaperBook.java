@@ -226,12 +226,28 @@ public class RxPaperBook {
      *
      * @param key object key
      * @return true if object with given key exists in Book storage, false otherwise
+     * @deprecated Use {@link #contains(String)}
      */
     public Single<Boolean> exists(final String key) {
         return Single.fromCallable(new Callable<Boolean>() {
             @Override
             public Boolean call() {
                 return book.exist(key);
+            }
+        }).subscribeOn(scheduler);
+    }
+
+    /**
+     * Check if an object with the given key is saved in Book storage.
+     *
+     * @param key object key
+     * @return true if object with given key exists in Book storage, false otherwise
+     */
+    public Single<Boolean> contains(final String key) {
+        return Single.fromCallable(new Callable<Boolean>() {
+            @Override
+            public Boolean call() {
+                return book.contains(key);
             }
         }).subscribeOn(scheduler);
     }
