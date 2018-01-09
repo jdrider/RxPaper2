@@ -208,6 +208,25 @@ public class RxPaperBookTest {
     }
 
     @Test
+    public void testContains() throws Exception {
+        RxPaperBook book = RxPaperBook.with("CONTAINS", Schedulers.trampoline());
+        final String key = "hello";
+        book.write(key, ComplexObject.random()).subscribe();
+        final TestObserver<Boolean> foundSubscriber = book.contains(key).test();
+        foundSubscriber.awaitTerminalEvent();
+        foundSubscriber.assertNoErrors();
+        foundSubscriber.assertValueCount(1);
+        foundSubscriber.assertValues(true);
+        // notFoundSubscriber
+        String noKey = ":(";
+        final TestObserver<Boolean> notFoundSubscriber = book.contains(noKey).test();
+        notFoundSubscriber.awaitTerminalEvent();
+        notFoundSubscriber.assertComplete();
+        notFoundSubscriber.assertValueCount(1);
+        notFoundSubscriber.assertValues(false);
+    }
+
+    @Test
     public void testGetAllKeys() throws Exception {
         RxPaperBook book = RxPaperBook.with("KEYS", Schedulers.trampoline());
         final String key = "hello";
